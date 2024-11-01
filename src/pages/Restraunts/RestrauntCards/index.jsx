@@ -181,13 +181,19 @@ const RestaurantCards = memo(
 
     const handleCheckboxChange = (type) => {
       setSelectedTypes((prevSelectedTypes) => {
-        if (prevSelectedTypes.includes(type)) {
-          return prevSelectedTypes.filter((t) => t !== type);
-        } else {
-          return [...prevSelectedTypes, type];
-        }
+        const updatedTypes = prevSelectedTypes.includes(type)
+          ? prevSelectedTypes.filter((t) => t !== type)
+          : [...prevSelectedTypes, type];
+        localStorage.setItem("selectedTypes", JSON.stringify(updatedTypes));
+        return updatedTypes;
       });
     };
+    useEffect(() => {
+      let filteredRestaurants = shuffledRestaurants.filter((restaurant) =>
+        selectedTypes.includes(restaurant.restraunt_type)
+      );
+      setFilteredRestaurants(filteredRestaurants);
+    }, [selectedTypes, shuffledRestaurants]);
 
     const shuffleArray = (array) => {
       const newArray = [...array]; 
